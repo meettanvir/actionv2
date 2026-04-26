@@ -12,31 +12,34 @@ const KEYS = {
   SKILL: 'action_skill',
 };
 
-export const DB = {
-  get<T>(key: string): T | null {
-    try {
-      const raw = localStorage.getItem(key);
-      return raw ? JSON.parse(raw) : null;
-    } catch {
-      return null;
-    }
-  },
+const getFromStorage = <T>(key: string): T | null => {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+};
 
-  set(key: string, value: any) {
-    try {
-      localStorage.setItem(key, JSON.stringify(value));
-    } catch (e) {
-      console.error('Storage error:', e);
-    }
-  },
+const setToStorage = (key: string, value: any) => {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch (e) {
+    console.error('Storage error:', e);
+  }
+};
+
+export const DB = {
+  get: getFromStorage,
+  set: setToStorage,
 
   // TODAY BLOCKS
   getTodayBlocks(): TimeBlock[] {
-    return this.get<TimeBlock[]>(KEYS.TODAY_BLOCKS) || [];
+    return getFromStorage<TimeBlock[]>(KEYS.TODAY_BLOCKS) || [];
   },
 
   saveTodayBlocks(blocks: TimeBlock[]) {
-    this.set(KEYS.TODAY_BLOCKS, blocks);
+    setToStorage(KEYS.TODAY_BLOCKS, blocks);
   },
 
   addBlock(block: Partial<TimeBlock>): TimeBlock {
@@ -85,18 +88,18 @@ export const DB = {
 
   // HABITS
   getTodayHabits(): Record<string, boolean> {
-    return this.get<Record<string, boolean>>(KEYS.TODAY_HABITS) || {};
+    return getFromStorage<Record<string, boolean>>(KEYS.TODAY_HABITS) || {};
   },
 
   setHabit(habitKey: string, value: boolean) {
     const habits = this.getTodayHabits();
     habits[habitKey] = value;
-    this.set(KEYS.TODAY_HABITS, habits);
+    setToStorage(KEYS.TODAY_HABITS, habits);
   },
 
   // ARCHIVE
   getArchive(): DayArchive[] {
-    return this.get<DayArchive[]>(KEYS.ARCHIVE) || [];
+    return getFromStorage<DayArchive[]>(KEYS.ARCHIVE) || [];
   },
 
   archiveToday() {
@@ -127,13 +130,13 @@ export const DB = {
     if (existingIdx >= 0) archive[existingIdx] = entry;
     else archive.push(entry);
 
-    this.set(KEYS.ARCHIVE, archive);
+    setToStorage(KEYS.ARCHIVE, archive);
     return entry;
   },
 
   // STREAK
   getStreak(): Streak {
-    return this.get<Streak>(KEYS.STREAK) || { current: 0, best: 0, lastDate: null };
+    return getFromStorage<Streak>(KEYS.STREAK) || { current: 0, best: 0, lastDate: null };
   },
 
   updateStreak(score: number) {
@@ -154,13 +157,13 @@ export const DB = {
       streak.current = 0;
     }
     streak.lastDate = today;
-    this.set(KEYS.STREAK, streak);
+    setToStorage(KEYS.STREAK, streak);
     return streak;
   },
 
   // SETTINGS
   getSettings(): Settings {
-    return this.get<Settings>(KEYS.SETTINGS) || {
+    return getFromStorage<Settings>(KEYS.SETTINGS) || {
       name: 'Elveance Martin',
       wakeTime: '06:30',
       sleepTarget: '01:00',
@@ -168,7 +171,7 @@ export const DB = {
   },
 
   saveSettings(settings: Settings) {
-    this.set(KEYS.SETTINGS, settings);
+    setToStorage(KEYS.SETTINGS, settings);
   },
 
   // RESET
@@ -179,12 +182,12 @@ export const DB = {
     this.updateStreak(score);
     localStorage.removeItem(KEYS.TODAY_BLOCKS);
     localStorage.removeItem(KEYS.TODAY_HABITS);
-    this.set(KEYS.LAST_RESET, new Date().toISOString());
+    setToStorage(KEYS.LAST_RESET, new Date().toISOString());
   },
 
   // TRACKERS
   getReading(): ReadingData {
-    return this.get<ReadingData>(KEYS.READING) || {
+    return getFromStorage<ReadingData>(KEYS.READING) || {
       book: null,
       sessions: [],
       totalPages: 0,
@@ -195,11 +198,11 @@ export const DB = {
   },
 
   saveReading(data: ReadingData) {
-    this.set(KEYS.READING, data);
+    setToStorage(KEYS.READING, data);
   },
 
   getSkill(): SkillData {
-    return this.get<SkillData>(KEYS.SKILL) || {
+    return getFromStorage<SkillData>(KEYS.SKILL) || {
       active: null,
       sessions: [],
       totalMins: 0,
@@ -209,6 +212,6 @@ export const DB = {
   },
 
   saveSkill(data: SkillData) {
-    this.set(KEYS.SKILL, data);
+    setToStorage(KEYS.SKILL, data);
   },
 };

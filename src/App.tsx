@@ -163,65 +163,65 @@ export default function App() {
   return (
     <div id="app" className="flex h-screen bg-[#0f1115] font-sans text-[#e2e8f0] overflow-hidden">
       {/* ── SIDEBAR NAVIGATION ── */}
-      <nav className="w-64 flex-shrink-0 border-r border-[#1f2937] bg-[#0a0c10] flex flex-col">
-        <div className="p-6">
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
-              <Target className="w-5 h-5 text-black" />
-            </div>
-            <span className="text-lg font-bold tracking-tight text-white">SystemAction</span>
+      <nav className="w-20 md:w-64 flex-shrink-0 flex flex-col bg-[#0a0c10] border-r border-[#1f2937] z-20">
+        <div className="p-8 flex items-center gap-3">
+          <div className="w-8 h-8 rounded bg-accent flex items-center justify-center">
+            <Target className="w-5 h-5 text-[#0f1115]" />
           </div>
-          
-          <ul className="space-y-1">
-            {[
-              { id: 'today', icon: Clock, label: 'Overview' },
-              { id: 'schedule', icon: Calendar, label: 'Schedule' },
-              { id: 'stats', icon: BarChart2, label: 'Diagnostics' },
-              { id: 'reading', icon: BookOpen, label: 'Reading' },
-              { id: 'skill', icon: Target, label: 'Skill Set' },
-              { id: 'settings', icon: SettingsIcon, label: 'Terminal' },
-            ].map(v => (
-              <li key={v.id}>
-                <button 
-                  onClick={() => setView(v.id)}
-                  className={`flex w-full items-center gap-3 px-4 py-2.5 rounded-md transition-all ${view === v.id ? 'bg-[#1c1f26] text-white' : 'text-gray-400 hover:text-white hover:bg-[#1c1f26]'}`}
-                >
-                  <v.icon size={16} className={view === v.id ? 'text-accent' : 'text-gray-500'} />
-                  <span className="text-sm font-medium">{v.label}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
+          <span className="hidden md:block font-serif text-xl tracking-tight text-accent">ACTION</span>
         </div>
 
-        <div className="mt-auto p-6 border-t border-[#1f2937]">
-          <div className="bg-[#1c1f26] p-4 rounded-xl border border-[#374151]">
-            <p className="text-xs text-gray-500 uppercase font-semibold mb-1 tracking-widest">STREAK</p>
-            <p className="text-accent text-sm font-medium flex items-center gap-1.5">
-              <Flame size={14} /> {streak.current} Day Streak
-            </p>
+        <div className="flex-1 px-4 space-y-2">
+          {[
+            { id: 'today', icon: Clock, label: 'Today' },
+            { id: 'schedule', icon: Calendar, label: 'Schedule' },
+            { id: 'stats', icon: BarChart2, label: 'Stats' },
+            { id: 'reading', icon: BookOpen, label: 'Reading' },
+            { id: 'skill', icon: Target, label: 'Skill Set' },
+            { id: 'settings', icon: SettingsIcon, label: 'Settings' },
+          ].map(v => (
+            <button 
+              key={v.id}
+              onClick={() => setView(v.id)}
+              className={`flex w-full items-center gap-3 px-4 py-2.5 rounded transition-all ${view === v.id ? 'bg-[#161920] text-accent' : 'text-text2 hover:bg-[#161920]/50 hover:text-white'}`}
+            >
+              <v.icon size={18} className={view === v.id ? 'text-accent' : 'text-muted'} />
+              <span className="hidden md:block text-sm font-medium">{v.label}</span>
+            </button>
+          ))}
+        </div>
+
+        <div className="p-6 border-t border-[#1f2937]">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-[#1f2937] flex items-center justify-center">
+              <span className="text-[10px] font-mono text-accent">ID</span>
+            </div>
+            <div className="hidden md:block overflow-hidden">
+              <p className="text-xs font-medium truncate">{settings.name}</p>
+              <p className="text-[10px] text-muted truncate">Daily Operations</p>
+            </div>
           </div>
         </div>
       </nav>
 
       {/* ── MAIN CONTENT AREA ── */}
-      <main className="flex-1 flex flex-col h-full bg-[#0f1115] overflow-y-auto">
-        {/* Header Bar */}
-        <header className="h-16 flex-shrink-0 flex items-center justify-between px-8 border-b border-[#1f2937] bg-[#0f1115]">
+      <main className="flex-1 flex flex-col h-full bg-[#0f1115] overflow-y-auto relative">
+        <header className="h-16 flex-shrink-0 flex items-center justify-between px-8 border-b border-[#1f2937] bg-[#0c0e12]/80 backdrop-blur-md sticky top-0 z-10">
           <div className="flex items-center gap-4">
-            <h1 className="text-xl font-semibold text-white">{view.charAt(0).toUpperCase() + view.slice(1)} Console</h1>
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-accent/10 text-accent border border-accent/20">ALL_SYSTEMS_NOMINAL</span>
+            <h1 className="font-serif text-lg text-white capitalize">{view}</h1>
+            <span className="text-[10px] font-mono text-muted uppercase tracking-widest">{now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
           </div>
-          <div className="flex items-center gap-6">
-            <div className="text-right hidden sm:block">
-              <p className="text-[10px] text-gray-500 uppercase tracking-widest">Current Session</p>
-              <p className="text-xs font-mono text-accent">{now.toLocaleTimeString('en-US', { hour12: false })}</p>
+          <div className="flex items-center gap-3">
+            <div className="hidden md:flex items-center gap-2 mr-4">
+              <Flame className="w-4 h-4 text-orange" />
+              <span className="text-xs font-mono">{streak.current} DAY STREAK</span>
             </div>
             <button 
               onClick={() => openBlockModal()}
-              className="px-4 py-2 bg-accent text-black text-sm font-bold rounded hover:bg-emerald-400 active:scale-95 transition-all shadow-[0_0_15px_rgba(16,185,129,0.3)]"
+              className="flex items-center gap-2 px-4 py-1.5 rounded bg-accent text-[#0f1115] font-medium text-xs hover:bg-accent-dim transition-colors shadow-[0_4px_12px_rgba(16,185,129,0.2)]"
             >
-              Execute Action
+              <Plus className="w-4 h-4" />
+              <span>ENTRY</span>
             </button>
           </div>
         </header>
@@ -274,6 +274,7 @@ export default function App() {
                 </div>
                 
                 <div className="timeline relative">
+                  <div className="absolute left-[51px] top-0 bottom-0 w-px bg-[#1f2937] z-0" />
                   {Array.from({ length: 21 }, (_, i) => i + 5).map(h => {
                     const displayHour = h % 24;
                     const label = displayHour === 0 ? '12 AM' :
@@ -281,11 +282,11 @@ export default function App() {
                                   displayHour === 12 ? '12 PM' :
                                   (displayHour - 12) + ' PM';
                     return (
-                      <div key={h} className="hour-row group relative flex min-h-[60px] border-t border-[#222]">
-                        <div className="hour-label w-[52px] flex-shrink-0 select-none px-2 py-1.5 font-mono text-[10px] text-muted">
+                      <div key={h} className="hour-row group relative flex min-h-[64px] border-t border-[#1f2937]/50 first:border-t-0">
+                        <div className="hour-label w-[52px] flex-shrink-0 select-none px-2 py-3 font-mono text-[9px] text-muted tracking-tighter">
                           {label}
                         </div>
-                        <div className="hour-blocks relative flex-1">
+                        <div className="hour-blocks relative flex-1 ml-1">
                           {blocks
                             .filter(b => {
                               let startH = Math.floor(timeToMinutes(b.start) / 60);
@@ -299,39 +300,46 @@ export default function App() {
                               const isNow = currentBlock?.id === block.id;
 
                               return (
-                                <div 
+                                <motion.div 
                                   key={block.id}
+                                  layoutId={block.id}
                                   onClick={() => openBlockModal(block)}
-                                  className={`time-block absolute left-0.5 right-0.5 rounded-[3px] border-l-[3px] px-2.5 py-1.5 text-[12px] transition-all hover:brightness-110 cat-${block.cat} ${block.done ? 'opacity-45' : ''} ${isNow ? 'ring-2 ring-accent animate-pulse' : ''}`}
+                                  className={`time-block absolute left-1 right-2 rounded-lg border-l-4 px-3 py-2 text-[12px] transition-all hover:shadow-lg hover:z-30 cat-${block.cat} ${block.done ? 'opacity-40 grayscale-[0.5]' : ''} ${isNow ? 'ring-2 ring-accent ring-offset-2 ring-offset-[#0f1115] shadow-[0_0_20px_rgba(16,185,129,0.2)]' : ''}`}
                                   style={{ 
                                     top: `${top}px`, 
-                                    height: `${Math.max(24, duration)}px`,
+                                    height: `${Math.max(32, duration)}px`,
                                     zIndex: isNow ? 20 : 1
                                   }}
                                 >
-                                  <div className="flex items-center justify-between gap-2 overflow-hidden">
-                                    <div className="flex-1 overflow-hidden">
-                                      <div className="truncate font-semibold text-white leading-tight">{block.name}</div>
-                                      <div className="font-mono text-[10px] text-[#999]">{formatDisplayTime(block.start)}</div>
+                                  <div className="flex items-center justify-between gap-3 h-full overflow-hidden">
+                                    <div className="flex-1 min-w-0">
+                                      <div className="truncate font-bold text-white tracking-tight leading-none mb-1">{block.name}</div>
+                                      <div className="flex items-center gap-2">
+                                        <span className="font-mono text-[9px] text-muted">{formatDisplayTime(block.start)}</span>
+                                        {block.note && <div className="w-1 h-1 rounded-full bg-muted/40" />}
+                                        <span className="truncate font-sans text-[9px] text-muted italic">{block.note}</span>
+                                      </div>
                                     </div>
                                     <button 
                                       onClick={(e) => { e.stopPropagation(); toggleDone(block.id); }}
-                                      className={`h-5 w-5 flex-shrink-0 animate-in fade-in zoom-in items-center justify-center rounded-[2px] border border-current text-[10px] transition-all ${block.done ? 'bg-accent text-black border-accent' : 'text-accent'}`}
+                                      className={`h-6 w-6 flex-shrink-0 flex items-center justify-center rounded-full border transition-all ${block.done ? 'bg-accent text-[#0f1115] border-accent shadow-inner' : 'border-white/10 text-white/20 hover:border-accent hover:text-accent'}`}
                                     >
-                                      {block.done && <Check size={12} strokeWidth={3} />}
+                                      {block.done && <Check size={12} strokeWidth={4} />}
                                     </button>
                                   </div>
-                                </div>
+                                </motion.div>
                               );
                             })
                           }
                         </div>
                         {/* Current time line if within this hour */}
-                        {now.getHours() === (h % 24) && (
+                        {now.getHours() === (displayHour) && (
                           <div 
-                            className="current-time-line absolute left-[52px] right-0 h-[2px] bg-red z-10 pointer-events-none before:absolute before:-left-1 before:-top-1 before:h-2.5 before:w-2.5 before:rounded-full before:bg-red"
+                            className="current-time-line absolute left-[52px] right-0 h-[2px] bg-red/60 z-10 pointer-events-none"
                             style={{ top: `${now.getMinutes()}px` }}
-                          />
+                          >
+                            <div className="absolute -left-1.5 -top-1 h-3 w-3 rounded-full bg-red shadow-[0_0_10px_rgba(239,68,68,0.5)] border-2 border-[#0f1115]" />
+                          </div>
                         )}
                       </div>
                     );
@@ -340,81 +348,74 @@ export default function App() {
               </div>
 
               {/* RIGHT PANEL */}
-              <div className="col-right flex flex-col gap-4 p-5 md:max-h-[calc(100vh-100px)] overflow-y-auto">
+              <div className="col-right flex flex-col gap-6 p-6 md:max-h-full overflow-y-auto">
                 {/* DAILY SCORE */}
-                <div className="card rounded-[var(--radius)] border border-[#222] bg-surface p-4">
-                  <div className="card-label mb-3 font-mono text-[9px] uppercase tracking-[2px] text-muted">TODAY'S EXECUTION</div>
-                  <div className="score-ring-wrap relative mx-auto mb-3 w-[100px]">
-                    <svg className="h-[100px] w-[100px]" viewBox="0 0 120 120">
-                      <circle cx="60" cy="60" r="50" fill="none" stroke="#1a1a1a" strokeWidth="8"/>
-                      <motion.circle 
-                        cx="60" cy="60" r="50" fill="none" 
-                        stroke={score >= 80 ? '#c8ff00' : score >= 50 ? '#ff9500' : '#ff4466'} 
-                        strokeWidth="8"
-                        strokeDasharray="314"
-                        animate={{ strokeDashoffset: 314 - (314 * score / 100) }}
-                        strokeLinecap="round" transform="rotate(-90 60 60)"
-                        transition={{ duration: 0.6 }}
-                      />
-                    </svg>
-                    <div className="score-center absolute inset-0 flex flex-col items-center justify-center">
-                      <div className="font-serif text-[22px] leading-none text-white">{score}%</div>
-                      <div className="text-[10px] text-muted">complete</div>
-                    </div>
+                <div className="bg-[#161920] border border-[#1f2937] rounded-xl p-5 shadow-xl">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-[10px] font-mono text-muted uppercase tracking-[2px]">Daily Execution</h3>
+                    <Target className="w-4 h-4 text-accent" />
                   </div>
-                  <div className="score-stats flex justify-around mt-2">
-                    <div className="flex flex-col items-center gap-0.5">
-                      <span className="font-mono text-lg font-medium text-white">{blocks.filter(b => b.done).length}</span>
-                      <small className="text-[10px] text-muted">done</small>
-                    </div>
-                    <div className="flex flex-col items-center gap-0.5">
-                      <span className="font-mono text-lg font-medium text-white">{blocks.length}</span>
-                      <small className="text-[10px] text-muted">total</small>
-                    </div>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-4xl font-serif text-white">{score}%</span>
+                    <span className="text-[10px] font-mono text-accent uppercase tracking-wider">{score >= 80 ? 'Master' : 'Active'}</span>
+                  </div>
+                  <div className="mt-5 h-1 w-full bg-[#0a0c10] rounded-full overflow-hidden">
+                    <motion.div 
+                      className="h-full bg-accent pr-1 shadow-[0_0_8px_rgba(16,185,129,0.5)]" 
+                      initial={{ width: 0 }}
+                      animate={{ width: `${score}%` }}
+                      transition={{ duration: 1, ease: "easeOut" }}
+                    />
                   </div>
                 </div>
 
                 {/* PROTOCOL */}
-                <div className="card rounded-[var(--radius)] border border-[#222] bg-surface p-4">
-                  <div className="card-label mb-3 font-mono text-[9px] uppercase tracking-[2px] text-muted">MORNING PROTOCOL</div>
-                  <div className="protocol-steps flex flex-col">
+                <div className="bg-[#161920] border border-[#1f2937] rounded-xl p-5 shadow-xl">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-[10px] font-mono text-muted uppercase tracking-[2px]">Morning Protocol</h3>
+                    <ClipboardList className="w-4 h-4 text-blue" />
+                  </div>
+                  <div className="space-y-2.5">
                     {[
-                      { key: 'wake', label: 'Woke by 6:30 AM' },
-                      { key: 'taichi', label: 'Tai Chi · 20 min' },
-                      { key: 'shower', label: 'Cold shower' },
-                      { key: 'task', label: 'Household task' },
-                      { key: 'phone', label: 'Phone across room ✓' },
+                      { key: 'wake', label: 'Wake at 6:30 AM', icon: '☀️' },
+                      { key: 'taichi', label: 'Movement / Flow', icon: '🧘' },
+                      { key: 'shower', label: 'Contrast Shower', icon: '🚿' },
+                      { key: 'phone', label: 'Phone Sanctuary', icon: '📵' },
                     ].map(h => (
-                      <label key={h.key} className="proto-step flex items-center gap-2.5 border-b border-[#222] py-2 last:border-0 cursor-pointer group">
-                        <div className="relative h-4 w-4 overflow-hidden rounded-[2px] border border-[#2a2a2a] transition-all group-hover:border-accent">
-                          <input 
-                            type="checkbox" 
-                            checked={habits[h.key] || false} 
-                            onChange={(e) => logHabit(h.key, e.target.checked)}
-                            className="peer h-full w-full cursor-pointer appearance-none outline-none checked:bg-accent" 
-                          />
-                          <Check size={12} className="pointer-events-none absolute inset-0 hidden m-auto text-black peer-checked:block" strokeWidth={4} />
+                      <button 
+                        key={h.key} 
+                        onClick={() => logHabit(h.key, !habits[h.key])}
+                        className={`w-full flex items-center justify-between p-3 rounded-lg border transition-all ${
+                          habits[h.key] 
+                            ? 'bg-accent/5 border-accent/30 text-accent' 
+                            : 'bg-[#0a0c10] border-[#1f2937] text-text2 hover:border-muted/50'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="text-sm">{h.icon}</span>
+                          <span className="text-xs font-medium">{h.label}</span>
                         </div>
-                        <span className={`text-[13px] transition-all ${habits[h.key] ? 'text-muted line-through' : 'text-[#e0e0e0]'}`}>{h.label}</span>
-                      </label>
+                        {habits[h.key] ? <Check className="w-4 h-4" /> : <div className="w-3.5 h-3.5 rounded-full border border-muted/30" />}
+                      </button>
                     ))}
                   </div>
                 </div>
 
-                {/* OVERRIDE */}
-                <div className="card rounded-[var(--radius)] border border-[#222] bg-surface p-4">
-                   <div className="card-label mb-3 font-mono text-[9px] uppercase tracking-[2px] text-muted">AVOIDANCE OVERRIDE</div>
-                   <div className="grid grid-cols-2 gap-1.5">
+                {/* SYSTEM OVERRIDES */}
+                <div className="bg-[#161920] border border-[#1f2937] rounded-xl p-5 shadow-xl">
+                   <div className="flex items-center justify-between mb-4">
+                     <h3 className="text-[10px] font-mono text-muted uppercase tracking-[2px]">System Overrides</h3>
+                     <AlertTriangle className="w-4 h-4 text-orange" />
+                   </div>
+                   <div className="grid grid-cols-2 gap-2">
                       {[
-                        { label: '📱 Phone urge', type: 'phone', msg: "Your phone is not going to study for you. Put it face-down, other side of the room." },
-                        { label: '🧹 Cleaning', type: 'clean', msg: "Cleaning is avoidance with a clean conscience. Sit down. progress before polish." },
-                        { label: '📋 Planning', type: 'plan', msg: "Execution makes you execute. Close this planning loop. Do the next physical action." },
-                        { label: '😴 Rest loop', type: 'rest', msg: "Rest is earned, not defaulted into. Set a 25-minute timer. Work first." },
+                        { label: 'DND ON', type: 'phone', msg: "Distraction Lockdown Initiated." },
+                        { label: 'RESET', type: 'rest', msg: "Sequence reset requested." },
                       ].map(o => (
                         <button 
                           key={o.type} 
                           onClick={() => showToast(o.msg, 'warn')}
-                          className="rounded-[var(--radius)] border border-[#2a2a2a] bg-[#1a1a1a] p-2 text-left text-xs text-[#e0e0e0] transition-all hover:border-red hover:bg-[rgba(255,68,102,0.06)] hover:text-red"
+                          className="flex flex-col items-center gap-2 py-3 rounded-lg bg-[#0a0c10] border border-[#1f2937] text-[10px] font-mono text-text2 hover:border-accent hover:text-accent transition-all"
                         >
                           {o.label}
                         </button>
@@ -564,93 +565,102 @@ export default function App() {
       {/* ── MODAL ── */}
       <AnimatePresence>
         {isModalOpen && (
-          <div className="fixed inset-0 z-500 flex items-center justify-center p-5">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-5">
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsModalOpen(false)}
-              className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+              className="absolute inset-0 bg-black/80 backdrop-blur-md"
             />
             <motion.div 
               initial={{ scale: 0.95, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              className="relative w-full max-w-md rounded-lg border border-[#2a2a2a] bg-surface p-0 shadow-2xl"
+              className="relative w-full max-w-md rounded-2xl border border-[#1f2937] bg-[#161920] overflow-hidden shadow-[0_32px_128px_rgba(0,0,0,0.8)]"
             >
-               <div className="flex items-center justify-between border-b border-[#222] p-5">
-                  <h3 className="font-serif text-xl text-white">{editingBlock ? 'Edit' : 'Add'} Time Block</h3>
-                  <button onClick={() => setIsModalOpen(false)} className="text-muted hover:text-white"><X size={20}/></button>
+               <div className="flex items-center justify-between border-b border-[#1f2937] px-6 py-5 bg-[#0a0c10]/40">
+                  <div>
+                    <h3 className="font-serif text-xl text-white">{editingBlock ? 'Modify' : 'New'} Architecture</h3>
+                    <p className="text-[10px] font-mono text-muted uppercase tracking-widest mt-1">Block Configuration</p>
+                  </div>
+                  <button onClick={() => setIsModalOpen(false)} className="w-8 h-8 flex items-center justify-center rounded-full bg-[#1c1f26] text-muted hover:text-white transition-colors"><X size={16}/></button>
                </div>
                
-               <div className="flex flex-col gap-4 p-5">
-                  <div className="flex flex-col gap-1.5">
-                    <label className="font-mono text-[10px] uppercase tracking-wider text-muted">TASK IDENTIFIER</label>
+               <div className="flex flex-col gap-5 p-6">
+                  <div className="flex flex-col gap-2">
+                    <label className="font-mono text-[9px] uppercase tracking-widest text-[#94a3b8]">Operation Name</label>
                     <input 
                       type="text" 
-                      placeholder="e.g. French Methodology Revision"
+                      placeholder="e.g. Deep Work Session"
                       value={blockForm.name}
                       onChange={(e) => setBlockForm({...blockForm, name: e.target.value})}
-                      className="rounded-[var(--radius)] border border-[#2a2a2a] bg-[#1a1a1a] p-2.5 text-sm outline-none focus:border-accent"
+                      className="w-full rounded-xl border border-[#1f2937] bg-[#0a0c10] px-4 py-3 text-sm text-white outline-none focus:border-accent/50 transition-colors"
                     />
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="flex flex-col gap-1.5">
-                      <label className="font-mono text-[10px] uppercase tracking-wider text-muted">START</label>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex flex-col gap-2">
+                      <label className="font-mono text-[9px] uppercase tracking-widest text-[#94a3b8]">Initiation Time</label>
                       <input 
                         type="time" 
                         value={blockForm.start}
                         onChange={(e) => setBlockForm({...blockForm, start: e.target.value})}
-                        className="rounded-[var(--radius)] border border-[#2a2a2a] bg-[#1a1a1a] p-2.5 text-sm outline-none focus:border-accent"
+                        className="w-full rounded-xl border border-[#1f2937] bg-[#0a0c10] px-4 py-3 text-sm text-white outline-none focus:border-accent/50 transition-colors"
                       />
                     </div>
-                    <div className="flex flex-col gap-1.5">
-                      <label className="font-mono text-[10px] uppercase tracking-wider text-muted">END</label>
+                    <div className="flex flex-col gap-2">
+                      <label className="font-mono text-[9px] uppercase tracking-widest text-[#94a3b8]">Termination Time</label>
                       <input 
                         type="time" 
                         value={blockForm.end}
                         onChange={(e) => setBlockForm({...blockForm, end: e.target.value})}
-                        className="rounded-[var(--radius)] border border-[#2a2a2a] bg-[#1a1a1a] p-2.5 text-sm outline-none focus:border-accent"
+                        className="w-full rounded-xl border border-[#1f2937] bg-[#0a0c10] px-4 py-3 text-sm text-white outline-none focus:border-accent/50 transition-colors"
                       />
                     </div>
                   </div>
                   
-                  <div className="flex flex-col gap-1.5">
-                    <label className="font-mono text-[10px] uppercase tracking-wider text-muted">ARCHITECTURE</label>
-                    <div className="flex flex-wrap gap-1.5">
+                  <div className="flex flex-col gap-2">
+                    <label className="font-mono text-[9px] uppercase tracking-widest text-[#94a3b8]">Classification</label>
+                    <div className="flex flex-wrap gap-2">
                       {Object.values(Category).map(c => (
                         <button 
                           key={c}
                           onClick={() => setBlockForm({...blockForm, cat: c})}
-                          className={`rounded-[var(--radius)] border border-[#2a2a2a] bg-[#1a1a1a] px-3 py-1.5 text-xs transition-all hover:border-accent ${blockForm.cat === c ? 'border-accent bg-[var(--accent-faint)] text-accent' : 'text-[#999]'}`}
+                          className={`flex-1 min-w-[80px] rounded-lg border px-3 py-2 text-[10px] font-semibold uppercase tracking-wider transition-all h-10 ${
+                            blockForm.cat === c 
+                              ? 'border-accent bg-accent/10 text-accent' 
+                              : 'border-[#1f2937] bg-[#0a0c10] text-[#94a3b8] hover:border-[#374151]'
+                          }`}
                         >
-                          {c.charAt(0).toUpperCase() + c.slice(1)}
+                          {c}
                         </button>
                       ))}
                     </div>
                   </div>
                   
-                  <div className="flex flex-col gap-1.5">
-                    <label className="font-mono text-[10px] uppercase tracking-wider text-muted">ANNOTATION</label>
-                    <input 
-                      type="text" 
-                      placeholder="Specific focus or goal..."
+                  <div className="flex flex-col gap-2">
+                    <label className="font-mono text-[9px] uppercase tracking-widest text-[#94a3b8]">Field Notes</label>
+                    <textarea 
+                      placeholder="Objectives and deliverables..."
                       value={blockForm.note}
+                      rows={2}
                       onChange={(e) => setBlockForm({...blockForm, note: e.target.value})}
-                      className="rounded-[var(--radius)] border border-[#2a2a2a] bg-[#1a1a1a] p-2.5 text-sm outline-none focus:border-accent"
+                      className="w-full rounded-xl border border-[#1f2937] bg-[#0a0c10] px-4 py-3 text-sm text-white outline-none focus:border-accent/50 transition-colors resize-none"
                     />
                   </div>
                </div>
                
-               <div className="flex justify-end gap-2 border-t border-[#222] p-4">
-                  {editingBlock && (
-                    <button onClick={deleteBlock} className="mr-auto text-red hover:underline flex items-center gap-1.5 text-xs">
-                      <Trash2 size={14}/> Delete
+               <div className="flex items-center justify-between border-t border-[#1f2937] px-6 py-5 bg-[#0a0c10]/20">
+                  {editingBlock ? (
+                    <button onClick={deleteBlock} className="flex items-center gap-2 text-xs text-red/60 hover:text-red transition-colors font-medium">
+                      <Trash2 size={14}/> <span>Abort</span>
                     </button>
-                  )}
-                  <button onClick={() => setIsModalOpen(false)} className="rounded-[var(--radius)] border border-[#2a2a2a] px-4 py-2 text-sm text-[#999] hover:text-white">Cancel</button>
-                  <button onClick={saveBlock} className="btn-primary">Save Architecture</button>
+                  ) : <div />}
+                  <div className="flex gap-3">
+                    <button onClick={() => setIsModalOpen(false)} className="px-5 py-2.5 text-xs font-semibold text-muted hover:text-white transition-colors">Dismiss</button>
+                    <button onClick={saveBlock} className="px-6 py-2.5 rounded-xl bg-accent text-[#0f1115] font-bold text-xs shadow-[0_4px_12px_rgba(16,185,129,0.2)] hover:shadow-[0_8px_20px_rgba(16,185,129,0.3)] transition-all active:scale-95">Commit Block</button>
+                  </div>
                </div>
             </motion.div>
           </div>
