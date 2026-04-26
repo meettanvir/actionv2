@@ -1,0 +1,6 @@
+{
+  "name": "Action System Planner",
+  "description": "A high-performance daily planner and habit tracker inspired by Elveance Martin's Action System, featuring a time-blocked schedule, morning protocols, and skill/reading trackers.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
